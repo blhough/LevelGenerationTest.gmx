@@ -12,9 +12,15 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\TransformationSquareToTriangle.gml</script>
+    <script>scripts\LevelGenerateNavagateTileUp.gml</script>
+    <script>scripts\TransformRectToPix_x.gml</script>
+    <script>scripts\script3.gml</script>
+    <script>scripts\PointDistanceSq.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\OgridDraw</object>
+    <object>objects\obj_generateLevel_C</object>
+    <object>objects\obj_genereateLevelBiome</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0</room>
