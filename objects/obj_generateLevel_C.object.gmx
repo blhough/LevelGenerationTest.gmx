@@ -2,7 +2,7 @@
 <object>
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
-  <visible>0</visible>
+  <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
@@ -28,7 +28,7 @@
             <string>///Initiallize
 levelGridWidth = 90;
 levelGridHeight = 45;
-biomeCountMax = 6;
+biomeCountMax = 8;
 biomeCountMin = 3
 biomeCount = round( random_range( biomeCountMin , biomeCountMax ) );
 biomeGeneratorsList = ds_list_create();
@@ -39,6 +39,8 @@ stage = 0
 
 r = 100;
 rsq = r * r;
+
+randomize();
 </string>
           </argument>
         </arguments>
@@ -69,9 +71,9 @@ repeat( biomeCount ) //place biome generators at random locations on grid and st
         coord_x = irandom( other.levelGridWidth );
         coord_y = irandom( other.levelGridHeight );
         pos_x = TransformRectToPix_x( coord_x );
-        pos_y = TransformRectToPix_x( coord_y );
+        pos_y = TransformRectToPix_y( coord_y );
     }
-    ds_list_add( biomeGeneratorList ,  biomeGenerator );
+    ds_list_add( biomeGeneratorsList ,  biomeGenerator );
 }
 </string>
           </argument>
@@ -124,6 +126,8 @@ switch( stage )
                     }
                 }
             }
+            r += triangleHeight
+            rsq = sqr( r )
         }
     break;
 }
@@ -151,7 +155,7 @@ switch( stage )
             <kind>1</kind>
             <string>///debug
 
-if ( debug_mode )
+if ( true )
 {
     var c , i , j , mod3;
 
@@ -171,6 +175,10 @@ if ( debug_mode )
                         draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_blue , 1 );
                     break; 
                     
+                    case 3:
+                        draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_green , 1 );
+                    break;                     
+                    
                     default:
                          draw_sprite(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );
                     break;
@@ -187,6 +195,10 @@ if ( debug_mode )
                     case 2:
                         draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_blue , 1 );
                     break; 
+                    
+                    case 3:
+                        draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_green , 1 );
+                    break;
                     
                     default:
                          draw_sprite(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );

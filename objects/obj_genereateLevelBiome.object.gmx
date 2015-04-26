@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>biomeID = choose( 1 ,2 );
+            <string>biomeID = choose( 1 ,2 , 3 );
 coord[1] = 0;
 rMult = random_range( 1 , 2 )
 </string>
@@ -50,8 +50,8 @@ rMult = random_range( 1 , 2 )
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_circle( x , y , 10 , false )
-draw_text( x , y , string( x ) + ", " + string( y ) + ": " + string( biomeID ) )
+            <string>draw_circle( pos_x , pos_y , 10 , false )
+draw_text( pos_x , pos_y , string( pos_x ) + ", " + string( pos_y ) + ": " + string( biomeID ) )
 </string>
           </argument>
         </arguments>
