@@ -30,6 +30,10 @@ levelGridWidth = 90;
 levelGridHeight = 45;
 biomeCountMax = 8;
 biomeCountMin = 3
+
+//random_set_seed(12345)
+randomize();
+
 biomeCount = round( random_range( biomeCountMin , biomeCountMax ) );
 biomeGeneratorsList = ds_list_create();
 
@@ -40,7 +44,7 @@ stage = 0
 r = 100;
 rsq = r * r;
 
-randomize();
+
 </string>
           </argument>
         </arguments>
@@ -104,6 +108,7 @@ switch( stage )
     case 0: // expanding biomes
         repeat( 1 )
         {
+            var change = false;
             ds_list_shuffle( biomeGeneratorsList );
             
             for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
@@ -111,7 +116,8 @@ switch( stage )
                 for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
                 {
                     if ( levelGrid[# i , j ] == 0 ) // if tile not already set to biome type
-                    {       
+                    {
+                        change = true       
                         var pos_x = TransformRectToPix_x( i ), pos_y = TransformRectToPix_y( j );
                         
                         for( var k = 0 ; k &lt; biomeCount ; k++ ) // loop thru biome generators
@@ -126,9 +132,74 @@ switch( stage )
                     }
                 }
             }
-            r += triangleHeight
-            rsq = sqr( r )
+            
+            if ( !change )
+            {
+                stage++;
+                break;
+            }
+            r += triangleHeight;
+            rsq = sqr( r );
         }
+    break;
+    
+    case 1:
+        repeat( irandom_range( 5 , 20 ) )
+        {
+            for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
+            {
+                for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+                {
+                    var sum = 0;
+                    var counter = 0;
+                    
+                    if ( ( i + j ) % 2 == 1  )
+                    {  
+                        if ( j - 1 &gt;= 0 )
+                        {
+                            counter++;
+                            sum += levelGrid[# i , j - 1 ];                        
+                        }
+                    }
+                    else
+                    {
+                        if ( j + 1 &lt; levelGridHeight )
+                        {
+                            counter++;
+                            sum += levelGrid[# i , j + 1 ] ;                        
+                        }
+                    }
+                        
+                    if ( i - 1 &gt;= 0 )
+                    {
+                        counter++;
+                        sum += levelGrid[# i - 1 , j ];    
+                    }
+                    
+                    if ( i + 1 &lt; levelGridWidth )
+                    {
+                        counter++;
+                        sum += levelGrid[# i + 1 , j ];        
+                    }
+                    
+                    if ( counter != 0 )
+                    {
+                        levelGrid[# i , j ] = sum / counter;
+                    }
+                }
+            }                
+        }
+        
+        for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
+        {
+            for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+            {
+                levelGrid[# i , j ] = round( levelGrid[# i , j ] );
+            }
+        }
+        
+        stage++;
+        
     break;
 }
 </string>
@@ -154,6 +225,8 @@ switch( stage )
           <argument>
             <kind>1</kind>
             <string>///debug
+var col = 10;
+
 
 if ( true )
 {
@@ -165,44 +238,58 @@ if ( true )
         {
             if ( ( i + j ) % 2 == 1  )
             {
-                switch( levelGrid[# i , j ] )
+               /* switch( levelGrid[# i , j ] )
                 {
                     case 1:
-                        draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_red , 1 );
-                    break;
-                    
                     case 2:
-                        draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_blue , 1 );
-                    break; 
-                    
                     case 3:
-                        draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_green , 1 );
-                    break;                     
-                    
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , make_colour_hsv(  levelGrid[# i , j ] * col , 255 , 255 )  , 1 );
+                    break;
+
                     default:
                          draw_sprite(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );
                     break;
+                }*/
+                
+                if ( levelGrid[# i , j ] == 0 )
+                {
+                    draw_sprite(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );
+                }
+                else
+                {
+                    draw_sprite_ext(sprite0,1, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , make_colour_hsv(  levelGrid[# i , j ] * col , 255 , 255 )  , 1 );
                 }
             }
             else
             {
-                switch( levelGrid[# i , j ] )
+                /*switch( levelGrid[# i , j ] )
                 {
                     case 1:
-                        draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_red , 1 );
-                    break;
-                    
                     case 2:
-                        draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_blue , 1 );
-                    break; 
-                    
                     case 3:
-                        draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , c_green , 1 );
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , make_colour_hsv(  levelGrid[# i , j ] * col , 255 , 255 )  , 1 );
                     break;
-                    
+
                     default:
                          draw_sprite(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );
-                    break;
+                    break;;
+                }*/
+                
+                if ( levelGrid[# i , j ] == 0 )
+                {
+                    draw_sprite(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) );
+                }
+                else
+                {
+                    draw_sprite_ext(sprite0,0, TransformRectToPix_x( i ) , TransformRectToPix_y( j ) , 1 , 1 , 0 , make_colour_hsv(  levelGrid[# i , j ] * col , 255 , 255 )  , 1 );
                 }
             }
         }

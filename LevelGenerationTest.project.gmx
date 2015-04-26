@@ -16,6 +16,7 @@
     <script>scripts\TransformRectToPix_x.gml</script>
     <script>scripts\script3.gml</script>
     <script>scripts\PointDistanceSq.gml</script>
+    <script>scripts\script5.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\OgridDraw</object>

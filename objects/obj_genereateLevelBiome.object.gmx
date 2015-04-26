@@ -25,9 +25,9 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>biomeID = choose( 1 ,2 , 3 );
+            <string>biomeID = choose( 1 ,4 , 7 );
 coord[1] = 0;
-rMult = random_range( 1 , 2 )
+rMult = choose( 1 , 2 , 3 )
 </string>
           </argument>
         </arguments>
