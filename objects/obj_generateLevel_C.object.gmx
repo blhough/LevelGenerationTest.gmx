@@ -44,7 +44,7 @@ stage = 0
 r = 100;
 rsq = r * r;
 
-
+iterate = 0;
 </string>
           </argument>
         </arguments>
@@ -144,7 +144,8 @@ switch( stage )
     break;
     
     case 1:
-        repeat( irandom_range( 5 , 20 ) )
+    
+        repeat( 1 )
         {
             for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
             {
@@ -190,15 +191,23 @@ switch( stage )
             }                
         }
         
-        for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
+        if ( iterate == 20 )
         {
-            for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+            for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
             {
-                levelGrid[# i , j ] = round( levelGrid[# i , j ] );
+                for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+                {
+                    levelGrid[# i , j ] = round( levelGrid[# i , j ] );
+                }
             }
+            
+            iterate = 0;
+            stage++;
         }
         
-        stage++;
+        iterate++;
+        
+
         
     break;
 }
