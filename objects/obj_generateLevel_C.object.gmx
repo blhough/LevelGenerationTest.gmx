@@ -246,7 +246,7 @@ var c = 200
 
 if ( true )
 {
-    var c , i , j , mod3;
+    var i , j , mod3;
 
     for( var i = 0 ; i &lt; levelGridWidth  ; i ++ )
     {
