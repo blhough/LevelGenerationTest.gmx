@@ -51,6 +51,8 @@ iterate = 0;
 mody = random( 1 ) / 10
 modx = random( 1 ) / 10
 md = 3
+blur = 25
+roughness = 20; // 10 = smooth  high = rough
 </string>
           </argument>
         </arguments>
@@ -141,6 +143,15 @@ switch( stage )
             
             if ( !change )
             {
+                for( var i = 0 ; i &lt; biomeCount ; i++ )
+                {
+                    with( biomeGeneratorsList[| i ] )
+                    {
+                        instance_destroy();
+                    }
+                }
+                
+                ds_list_destroy( biomeGeneratorsList );
                 stage++;
                 break;
             }
@@ -149,7 +160,7 @@ switch( stage )
         }
     break;
     
-    case 1:
+    case 1: // blur biomes
     
         repeat( 1 )
         {
@@ -179,7 +190,7 @@ switch( stage )
                     }
                     
                         
-                    if ( !irandom( abs( sin( j * mody ) + sin( i * modx ) + 2 ) * md ) )
+                    if ( !irandom( abs( sin( j * mody ) + sin( i * modx ) + 2 ) * md ) &amp;&amp; i - 1 &gt;= 0)
                     {
                          levelGridBlur[# i , j ] = levelGridBlur[# i , j ] | levelGrid[# i - 1 , j ];        
                     }
@@ -202,17 +213,85 @@ switch( stage )
         }
 
 
-        if ( iterate == 15 )
+        if ( iterate == blur )
         {
             
-            ds_grid_destroy( levelGridBlur );
+            //ds_grid_destroy( levelGridBlur );
             iterate = 0;
             stage++;
+            break;
         }
         
         iterate++;
+    break;
+    
+    case 2: // smooth biomes
+        repeat(1)
+        {
+        for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
+        {
+            for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+            {
+            
+                levelGridBlur[# i , j ] = levelGrid[# i , j ]
+                
+                if ( i - 1 &gt;= 0  &amp;&amp;  i + 1 &lt; levelGridWidth &amp;&amp; irandom(roughness) &lt; 10 )
+                {
+                    if ( ( i + j ) % 2 == 1 )
+                    {  
+                        if ( j - 1 &gt;= 0 )
+                        {
+                            if ( levelGrid[# i , j - 1 ] == levelGrid[# i - 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i , j - 1 ];          
+                            }
+                            else if ( levelGrid[# i , j - 1 ] == levelGrid[# i + 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i , j - 1 ];          
+                            }
+                            else if ( levelGrid[# i + 1 , j ] == levelGrid[# i - 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i + 1 , j ];          
+                            }                                             
+                        }
+                    }
+                    else
+                    {
+                        if ( j + 1 &lt; levelGridHeight )
+                        {
+                            if ( levelGrid[# i , j + 1 ] == levelGrid[# i - 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i , j + 1 ];          
+                            }
+                            else if ( levelGrid[# i , j + 1 ] == levelGrid[# i + 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i , j + 1 ];          
+                            }
+                            else if ( levelGrid[# i + 1 , j ] == levelGrid[# i - 1 , j ] )
+                            {
+                                levelGrid[# i , j ] =  levelGrid[# i + 1 , j ];          
+                            }                       
+                        }
+                    }
+                }                
+            }
+        }
         
-
+        for( var i = 0 ; i &lt; levelGridWidth ; i++ ) // loop thru x grid
+        {
+            for( var j = 0 ; j &lt; levelGridHeight ; j++ ) // loop thru y grid
+            {
+                //levelGrid[# i , j ] = levelGridBlur[# i , j ];
+            }
+        }
+        }
+        
+        if ( iterate == 1 )
+        {
+            stage++
+            }
+        
+        iterate++;
         
     break;
 }
@@ -240,8 +319,8 @@ switch( stage )
             <kind>1</kind>
             <string>///debug
 var col = 10;
-var b = 30
-var c = 200
+var b = 250
+var c = 5;
 
 
 if ( true )
