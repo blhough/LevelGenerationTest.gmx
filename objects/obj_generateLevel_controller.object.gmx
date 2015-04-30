@@ -51,8 +51,8 @@ iterate = 0;
 mody = random( 1 ) / 10
 modx = random( 1 ) / 10
 md = 3
-blur = 25
-roughness = 20; // 10 = smooth  high = rough
+blur = 20
+roughness = 15; // 10 = smooth  high = rough
 </string>
           </argument>
         </arguments>
@@ -77,7 +77,7 @@ roughness = 20; // 10 = smooth  high = rough
 
 repeat( biomeCount ) //place biome generators at random locations on grid and store them in the list
 {
-    var biomeGenerator = instance_create( 0 , 0 , obj_genereateLevelBiome );
+    var biomeGenerator = instance_create( 0 , 0 , obj_generateLevel_biome );
     with( biomeGenerator )
     {
         coord_x = irandom( other.levelGridWidth );
@@ -173,7 +173,7 @@ switch( stage )
             
                     if( !irandom( abs( sin( j * mody ) + sin( i * modx ) + 2 ) * md ) )
                     {
-                        if ( ( i + j ) % 2 == 1  )
+                        if isTileFacingDown( i , j )
                         {  
                             if ( j - 1 &gt;= 0 )
                             {
@@ -237,7 +237,7 @@ switch( stage )
                 
                 if ( i - 1 &gt;= 0  &amp;&amp;  i + 1 &lt; levelGridWidth &amp;&amp; irandom(roughness) &lt; 10 )
                 {
-                    if ( ( i + j ) % 2 == 1 )
+                    if isTileFacingDown( i , j )
                     {  
                         if ( j - 1 &gt;= 0 )
                         {
@@ -288,11 +288,39 @@ switch( stage )
         
         if ( iterate == 1 )
         {
-            stage++
-            }
+            var digger;
+            digger[0] =  instance_create( 0 , 0 , obj_generateLevel_digger );
+            iterate = 0;
+            stage++;
+            break;
+        }
         
         iterate++;
         
+    break;
+    
+    case 3: // cut out level
+        var diggerCount = instance_number(  obj_generateLevel_digger );
+        var test1 = 0, test2 = 0;
+        
+        for( var i = 0 ; i &lt; diggerCount ; i ++ )
+        {
+            var digger = instance_find( obj_generateLevel_digger , i );
+            // create new digger
+            // cut out area
+           // if isTileFacingDown(1 )
+            {
+                LevelGenerateNavagateTile( digger , 1 )
+            }
+            
+            
+            // move in a direction
+        }
+        
+        
+        
+        
+    
     break;
 }
 </string>
@@ -319,8 +347,8 @@ switch( stage )
             <kind>1</kind>
             <string>///debug
 var col = 10;
-var b = 250
-var c = 5;
+var b = 254
+var c = 1;
 
 
 if ( true )
@@ -331,7 +359,7 @@ if ( true )
     {
         for( var j = 0 ; j &lt; levelGridHeight ; j ++ )
         {
-            if ( ( i + j ) % 2 == 1  )
+            if isTileFacingDown( i , j )
             {
                /* switch( levelGrid[# i , j ] )
                 {
@@ -395,6 +423,22 @@ if ( true )
 </string>
           </argument>
         </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="32">
+      <action>
+        <libid>1</libid>
+        <id>331</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_restart_game</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
       </action>
     </event>
   </events>
